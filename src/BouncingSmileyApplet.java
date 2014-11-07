@@ -1,3 +1,6 @@
+// BouncingSmileyApplet.java 
+
+
 import java.awt.*;
 import java.applet.*;
 import java.awt.geom.*;
@@ -13,7 +16,9 @@ public class BouncingSmileyApplet extends Applet
 	// thickness of the walls, the time the
 	// animation should run (in milliseconds)
 	// and perhaps others
-
+	Color BACKGROUND_COLOR;
+	long TIME_TO_RUN = 5000;
+	int REVERSE_DIRECTION = -1;
 	
 	// Suggested fields:
 	//	the smiley group to be displayed
@@ -23,8 +28,16 @@ public class BouncingSmileyApplet extends Applet
 	//	the four walls of the display
 	//  the x and y coordinates of the upper left corner 
 	//  of the current face part	
+	AnimatedSmiley animSmiley1;
+	AnimatedSmiley animSmiley2;
+	AnimatedSmiley animSmiley3;
 	
+	BouncingDisplay bouncingDisplay;
+	BouncingGroup bouncingGroup;
+	Random random;
 	
+	Wall LEFT, RIGHT, TOP, BOTTOM;
+	int upperLeftX, upperLeftY;
 	// A wall of the display (off which the smiley bounces)
 	// The outer class will make four objects of this class,
 	// one for each wall. Not required (since private); still,
@@ -67,7 +80,16 @@ public class BouncingSmileyApplet extends Applet
 	//   make a random number generator (used in animation)
 	public BouncingSmileyApplet()
 	{
-		// complete
+		// complete		
+		bouncingGroup = new BouncingGroup();
+		bouncingDisplay = new BouncingDisplay(bouncingGroup);
+		
+		animSmiley1 = bouncingGroup.getSmiley1();
+		animSmiley2 = bouncingGroup.getSmiley2();
+		animSmiley3 = bouncingGroup.getSmiley3();		
+		
+		BACKGROUND_COLOR = Color.black;
+		random = new Random();
 	}
 
 	
@@ -83,6 +105,7 @@ public class BouncingSmileyApplet extends Applet
 	public void init()
 	{
 		// complete
+		setBackground(BACKGROUND_COLOR);
 	}
 
 	
@@ -103,13 +126,21 @@ public class BouncingSmileyApplet extends Applet
 	public void animate()
 	{
 		class AnimationRunnable implements Runnable
-		{
+		{	
 			public void run()
 			{
 				// Set the current time
-
+			
+				long startTime = System.currentTimeMillis();
+				long endTime = System.currentTimeMillis() + TIME_TO_RUN;
 				// For each frame, for as long as we are animating...
 					// repaint the current frame and pause
+				while (startTime < endTime)
+				{
+					//paint( takes Grahics g )
+					pause(200);
+					startTime = System.currentTimeMillis();
+				}
 			}
 		}
 		Thread t = new Thread(new AnimationRunnable());
@@ -152,15 +183,15 @@ public class BouncingSmileyApplet extends Applet
 	// it hits a wall; when it does, swap color of
 	// smiley and wall, and change direction
 	private void moveCntSmiley(AnimatedSmiley cntSmiley)
+	{
 		// complete
-
+	}
 	
 	// Swap the colors of the wall just touched and the smiley
 	private void switchColor(AnimatedSmiley cntSmiley, WallName wallTouched)
 	{
-		Color colorSmiley = cntSmiley.getFace().getColor();
+		// complete
 	}
-
 	
 	// Change the smiley's direction so it is away from
 	// the wall just touched.
@@ -179,7 +210,9 @@ public class BouncingSmileyApplet extends Applet
 	// whichWallWasHit: return a label (LEFT, RIGHT, TOP, BOTTOM) to tell us which wall 
 	// was hit or NONE if none was hit
 	private WallName whichWallWasHit(AnimatedSmiley cntSmiley)
+	{
 		// complete
+	}
 	
 	// Return true if hit left wall, false otherwise
 	private boolean hitLeftWall(AnimatedSmiley cntSmiley)
@@ -219,37 +252,43 @@ public class BouncingSmileyApplet extends Applet
 	
 	// Return which wall's edge was hit
 	public int getWallEdge(WallName wallName)
+	{
 		// complete
-	
+	}
 	
 	// Return the color of the wallName wall
 	public Color getWallColor(WallName wallName)
-		// complete
-
+	{
+	// complete
+	}
 	
 	
 	// Set the specified wall to the provided color
 	public void setWallColor(WallName wallName, Color c)
+	{
 		// complete
-
+	}
 	
 	// drawSmiley: draw a smiley by drawing each of its parts
 	private void drawSmiley(SmileyFace cntSmiley)
+	{
 		// complete
-
+	}
 	
 	// drawPart: make an ellipse corresponding to the shape 
 	// of the given smiley face part; the ellipses are what 
 	// are actually drawn
 	private void drawPart(SmileyFacePart part)
+	{
 		// complete
-	
+	}
 	
 	// erase: erase (by making the same as a background color) the
 	// smiley face currently shown on the display
 	private void erase(SmileyFace smiley)
+	{
 		// complete
-
+	}
 	
 	// computeUpperLeft: determine the x- and y-coordinate of the
 	// upper-left of a SmileyFacePart.  This should be called whenever
@@ -257,6 +296,7 @@ public class BouncingSmileyApplet extends Applet
 	// change.
 	private void computeUpperLeft(SmileyFacePart part)	{
 		// complete
+	}
 }
 
 

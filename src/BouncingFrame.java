@@ -17,7 +17,9 @@ public class BouncingFrame extends BasicFrame
 	
 	public BouncingFrame(String title)
 	{
-		
+		super(title);
+		frame = new JFrame();
+		frame.setSize(HEIGHT, WIDTH);
 
 	}
 	
@@ -25,6 +27,7 @@ public class BouncingFrame extends BasicFrame
 	//  smiley animation, make the bouncing frame visible, and fire up the animation
 	public void activateAnimation(BouncingGroup bouncers, BouncingDisplay bounceDisplay)
 	{
-		// complete
+		bouncers = new BouncingGroup();
+		bounceDisplay = new BouncingDisplay(bouncers);
 	}
 }

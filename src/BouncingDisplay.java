@@ -53,7 +53,8 @@ import java.awt.geom.*;
 		private AnimatedSmiley prevSmiley3;
 		private BouncingGroup bouncingGroup;
 		
-		
+		private int width;
+		private int height;
 		
 		// A wall of the display (off which the smiley bounces)
 		// The outer class will make four objects of this class,
@@ -133,11 +134,15 @@ import java.awt.geom.*;
 		SCREEN_COLOR = Color.white;
 		wallThickness = 10;
 		
+		// these dimensions probably need to come from the BouncingFrame...not sure yet
+		width = 500;
+		height = 480;
+		
 		//wall edge information (width, height) 
-		leftWallDimensions = new Dimension(50,500);
-		rightWallDimensions = new Dimension(-50, 500);
-		topWallDimensions = new Dimension(500, 50);
-		bottomWallDimensions = new Dimension(500, -50);
+		leftWallDimensions = new Dimension(wallThickness, height);
+		rightWallDimensions = new Dimension(wallThickness, height);
+		topWallDimensions = new Dimension(width, wallThickness);
+		bottomWallDimensions = new Dimension(width, wallThickness);
 		
 		// making the smileys
 		bouncingGroup = new BouncingGroup();
@@ -153,9 +158,9 @@ import java.awt.geom.*;
 		//Wall coordinates
 		//upperLeftFaceCoordinates = new Point(200, 200);
 		leftWallCoordinates = new Point(0,0);
-		rightWallCoordinates = new Point(500, 0);
+		rightWallCoordinates = new Point(width - wallThickness, 0);
 		topWallCoordinates = new Point(0, 0);
-		bottomWallCoordinates = new Point(0, 500);
+		bottomWallCoordinates = new Point(0, height - wallThickness);
 		
 		//build walls
 		leftWall = new Wall(WallName.LEFT, Color.blue);
@@ -173,25 +178,31 @@ import java.awt.geom.*;
 		// Done as a matter of course as the first two
 		// lines of a paintComponent routine
 		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D)g;
+		graphicManager = (Graphics2D)g;
 		
 		// Erase the currently-displayed smileys
 		// Draw each smiley onto its place on the screen
 		// The moving smileys are now the previous smileys...
-		g2.setColor(leftWall.wallColor);
+		graphicManager.setColor(leftWall.wallColor);
 		
 		//g2.draw(leftWall.wallRect);
-		drawWall(leftWall, g2);
-		drawWall(rightWall, g2);
-		drawWall(bottomWall, g2);
-		drawWall(topWall, g2);
+		drawWall(leftWall);
+		drawWall(rightWall);
+		drawWall(bottomWall);
+		drawWall(topWall);
+		
+		// drawSmiley still needs some work, and we still need to 
+		// assign previous smiley so that we can do the deletions
+		drawSmiley(animSmiley1);
+		drawSmiley(animSmiley2);
+		drawSmiley(animSmiley3);
 	}
 	
-	private void drawWall(Wall wall, Graphics2D g)
+	private void drawWall(Wall wall)
 	{
-		g.setColor(wall.wallColor);
-		g.fillRect(wall.wallRect.x, wall.wallRect.y, wall.wallRect.width, wall.wallRect.height);
-		g.draw(wall.wallRect);
+		graphicManager.setColor(wall.wallColor);
+		graphicManager.fillRect(wall.wallRect.x, wall.wallRect.y, wall.wallRect.width, wall.wallRect.height);
+		graphicManager.draw(wall.wallRect);
 	}
 		
 	// Return which wall's edge was hit
@@ -287,7 +298,8 @@ import java.awt.geom.*;
 	private void drawPart(SmileyFacePart part)
 	{
 		Ellipse2D.Double copiedPart = new Ellipse2D.Double(part.getCenterX(), part.getCenterY(), part.getXLength(), part.getYLength());
-		graphicManager.setColor(part.getColor());
+		
+		graphicManager.fill(copiedPart);
 		graphicManager.draw(copiedPart);
 	}
 	

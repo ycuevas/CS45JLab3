@@ -10,7 +10,7 @@
 import java.awt.*;
 import java.awt.geom.*;
 
-import javafx.scene.shape.Ellipse;
+//import javafx.scene.shape.Ellipse;
 
 // Panel that displays the moving smiley
 	class BouncingDisplay extends BasicDisplay
@@ -23,9 +23,10 @@ import javafx.scene.shape.Ellipse;
 										topWallDimensions, bottomWallDimensions;
 		
 		//upper left x and y coordinates
-				private static Point upperLeftFaceCoordinates, 
-									leftWallCoordinates, rightWallCoordinates,
-										topWallCoordinates, bottomWallCoordinates;
+		private static Point upperLeftX, upperLeftY; 
+		
+		private static Point leftWallCoordinates, rightWallCoordinates,
+							 topWallCoordinates, bottomWallCoordinates;
 				
 		private int wallThickness;
 		private Color BACKGROUND_COLOR, SCREEN_COLOR;
@@ -79,13 +80,12 @@ import javafx.scene.shape.Ellipse;
 				// is indicated by position (WallName.LEFT, 
 				// WallName.RIGHT, WallName.TOP, WallName.BOTTOM)
 				wallColor = c;
-				graphicManager.setColor(wallColor);
 				
 				// figure out upper left, upper right, xLength and 
 				// yLength for each rectangle representing a wall, 
 				// and the edge the smiley will hit when it touches 
 				// a wall, 
-				
+
 				// using information about the display screen 
 				// and frame, and the wall's thickness
 				
@@ -94,9 +94,6 @@ import javafx.scene.shape.Ellipse;
 				{
 					wallRect = new Rectangle(leftWallCoordinates, leftWallDimensions);
 					wallEdge = (int) (leftWallCoordinates.getX() + leftWallDimensions.getWidth());
-					graphicManager.drawString(name, 0,250);
-					graphicManager.drawRect((int) leftWallCoordinates.getX(), (int) leftWallCoordinates.getY(),
-											(int) leftWallDimensions.getWidth(), (int) leftWallDimensions.getHeight());
 				}
 				
 				//create right wall
@@ -104,9 +101,6 @@ import javafx.scene.shape.Ellipse;
 				{
 					wallRect = new Rectangle(rightWallCoordinates, rightWallDimensions);
 					wallEdge = (int) (rightWallCoordinates.getX() + rightWallDimensions.getWidth());
-					graphicManager.drawString(name, 500, 250);
-					graphicManager.drawRect((int) rightWallCoordinates.getX(), (int) rightWallCoordinates.getY(),
-											(int) rightWallDimensions.getWidth(), (int) rightWallDimensions.getHeight());
 				}
 				
 				//create top wall
@@ -114,9 +108,6 @@ import javafx.scene.shape.Ellipse;
 				{
 					wallRect = new Rectangle(topWallCoordinates, topWallDimensions);
 					wallEdge = (int) (topWallCoordinates.getY() + topWallDimensions.getHeight());
-					graphicManager.drawString(name, 0, 250);
-					graphicManager.drawRect((int) topWallCoordinates.getX(), (int) topWallCoordinates.getY(),
-							(int) topWallDimensions.getWidth(), (int) topWallDimensions.getHeight());
 				}
 				
 				//create bottom wall
@@ -124,9 +115,6 @@ import javafx.scene.shape.Ellipse;
 				{
 					wallRect = new Rectangle(bottomWallCoordinates, bottomWallDimensions);
 					wallEdge = (int) (bottomWallCoordinates.getY() + bottomWallDimensions.getHeight());
-					graphicManager.drawString(name, 500, 250);
-					graphicManager.drawRect((int) bottomWallCoordinates.getX(), (int) bottomWallCoordinates.getY(),
-							(int) bottomWallDimensions.getWidth(), (int) bottomWallDimensions.getHeight());
 				}
 			}
 		}
@@ -163,17 +151,17 @@ import javafx.scene.shape.Ellipse;
 		prevSmiley3 = new AnimatedSmiley(animSmiley3);
 		
 		//Wall coordinates
-		upperLeftFaceCoordinates = new Point(200, 200);
+		//upperLeftFaceCoordinates = new Point(200, 200);
 		leftWallCoordinates = new Point(0,0);
 		rightWallCoordinates = new Point(500, 0);
 		topWallCoordinates = new Point(0, 0);
 		bottomWallCoordinates = new Point(0, 500);
 		
 		//build walls
-		Wall leftWall = new Wall(WallName.LEFT, Color.blue);
-		Wall rightWall = new Wall(WallName.RIGHT, Color.yellow);
-		Wall topWall = new Wall(WallName.TOP, Color.red);
-		Wall bottomWall = new Wall(WallName.BOTTOM, Color.orange);
+		leftWall = new Wall(WallName.LEFT, Color.blue);
+		rightWall = new Wall(WallName.RIGHT, Color.yellow);
+		topWall = new Wall(WallName.TOP, Color.red);
+		bottomWall = new Wall(WallName.BOTTOM, Color.orange);
 	}
 	
 	// paintComponent: called by the runtime environment 
@@ -190,27 +178,77 @@ import javafx.scene.shape.Ellipse;
 		// Erase the currently-displayed smileys
 		// Draw each smiley onto its place on the screen
 		// The moving smileys are now the previous smileys...
+		g2.setColor(leftWall.wallColor);
 		
-		
+		//g2.draw(leftWall.wallRect);
+		drawWall(leftWall, g2);
+		drawWall(rightWall, g2);
+		drawWall(bottomWall, g2);
+		drawWall(topWall, g2);
 	}
 	
+	private void drawWall(Wall wall, Graphics2D g)
+	{
+		g.setColor(wall.wallColor);
+		g.fillRect(wall.wallRect.x, wall.wallRect.y, wall.wallRect.width, wall.wallRect.height);
+		g.draw(wall.wallRect);
+	}
 		
 	// Return which wall's edge was hit
 	public int getWallEdge(WallName wallName)
 	{
-		// complete
+		return getWall(wallName).wallEdge;
 	}
 	
 	// Return the color of the wallName wall
 	public Color getWallColor(WallName wallName)
 	{
-		return wallName.wallColor;
+		return getWall(wallName).wallColor;
+	}
+	
+	private Wall getWall(WallName wallName)
+	{
+		Wall wall = null;
+		
+		if(wallName == WallName.BOTTOM)
+		{
+			wall = bottomWall;
+		}
+		else if(wallName == WallName.LEFT)
+		{
+			wall = leftWall;
+		}
+		else if(wallName == WallName.RIGHT)
+		{
+			wall = rightWall;
+		}
+		else if(wallName == WallName.TOP)
+		{
+			wall = topWall;
+		}
+		
+		return wall;
 	}
 	
 	// Set the specified wall to the provided color
 	public void setWallColor(WallName wallName, Color c)
 	{	
-		wallName.wallColor = c;
+		if(wallName == WallName.BOTTOM)
+		{
+			bottomWall = new Wall(wallName, c);
+		}
+		else if(wallName == WallName.LEFT)
+		{
+			leftWall = new Wall(wallName, c);
+		}
+		else if(wallName == WallName.RIGHT)
+		{
+			rightWall = new Wall(wallName, c);
+		}
+		else if(wallName == WallName.TOP)
+		{
+			topWall = new Wall(wallName, c);
+		}	
 	}
 	
 	// The methods described below are private, and so
@@ -228,6 +266,9 @@ import javafx.scene.shape.Ellipse;
 	private void computeUpperLeft(SmileyFacePart part)
 	{
 		// complete
+		
+		part.getCenterX();
+		part.getCenterY();
 	}
 	
 	// drawSmiley: draw a smiley by drawing each of its parts

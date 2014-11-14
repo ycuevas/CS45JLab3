@@ -21,7 +21,7 @@ public class Smiley
 {
 	public static void main(String[] args)
 	{
-		BouncingGroup bouncers= new BouncingGroup();
+		BouncingGroup bouncers = new BouncingGroup();
 		BouncingDisplay bounceDisplay = new BouncingDisplay(bouncers);
 		BouncingFrame f = new BouncingFrame("Smiley Faces");
 		f.add(bounceDisplay);

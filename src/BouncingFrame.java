@@ -1,10 +1,12 @@
+import javax.swing.JFrame;
+
 // Make the frame consisting of a panel in which smiley faces are drawn,
 // building on the attributes of the BasicFrame
 public class BouncingFrame extends BasicFrame
 {
 	// The frame contains an animation
 	// of a bouncing smiley group
-	
+	JFrame frame;
 	// public inherited constants: 
 
 	// add needed fields here
@@ -20,6 +22,8 @@ public class BouncingFrame extends BasicFrame
 		super(title);
 		frame = new JFrame();
 		frame.setSize(HEIGHT, WIDTH);
+		frame.setResizable(false);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	}
 	
@@ -27,7 +31,9 @@ public class BouncingFrame extends BasicFrame
 	//  smiley animation, make the bouncing frame visible, and fire up the animation
 	public void activateAnimation(BouncingGroup bouncers, BouncingDisplay bounceDisplay)
 	{
-		bouncers = new BouncingGroup();
-		bounceDisplay = new BouncingDisplay(bouncers);
+		SmileyAnimation smileyAnimation = new SmileyAnimation(bouncers, bounceDisplay);
+		frame.add(bounceDisplay);
+		frame.setVisible(true);
+		smileyAnimation.animate();
 	}
 }

@@ -232,7 +232,7 @@ public class BouncingSmileyApplet extends Applet
 	private WallName whichWallWasHit(AnimatedSmiley cntSmiley)
 	{
 		// complete
-
+		return null;
 	}
 	
 
@@ -242,6 +242,7 @@ public class BouncingSmileyApplet extends Applet
 		// Wall was hit if x coordinate of leftmost point of smiley is
 		// same or less than edge of the left wall and is (still)
 		// heading into the wall
+		return false;
 	}
 
 
@@ -251,6 +252,7 @@ public class BouncingSmileyApplet extends Applet
 		// Wall was hit if x coordinate of rightmost point of smiley is
 		// same or greater than edge of the right wall and is (still)
 		// heading into the wall
+		return false;
 	}
 
 
@@ -260,6 +262,7 @@ public class BouncingSmileyApplet extends Applet
 		// Wall was hit if y coordinate of top-most point of smiley is
 		// same or less than edge of the top wall and is (still)
 		// heading into the wall
+		return false;
 	}
 
 
@@ -269,6 +272,7 @@ public class BouncingSmileyApplet extends Applet
 		// Wall was hit if y coordinate of bottom-most point of smiley is
 		// same or greater than edge of the bottom wall and is (still)
 		// heading into the wall
+		return false;
 	}
 
 
@@ -276,22 +280,15 @@ public class BouncingSmileyApplet extends Applet
 	public int getWallEdge(WallName wallName)
 	{
 		// complete
-
+		return -1;
 	}
 	
 	// Return the color of the wallName wall
 	public Color getWallColor(WallName wallName)
 	{
 	// complete
+		return null;
 	}
-	
-	
-
-
-	// Return the color of the wallName wall
-	public Color getWallColor(WallName wallName)
-		// complete
-
 
 
 	// Set the specified wall to the provided color

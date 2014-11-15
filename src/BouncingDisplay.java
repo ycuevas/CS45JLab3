@@ -8,28 +8,30 @@
 
 
 import java.awt.*;
-import java.awt.geom.*;
 
 //import javafx.scene.shape.Ellipse;
 
 // Panel that displays the moving smiley
 	class BouncingDisplay extends BasicDisplay
 	{
+		// necessary for classes that implement Serializable
+		private static final long serialVersionUID = 1L;
+
 		// Constants go here. You'll likely want them
 		// for the four edges of the frame, the 
 		// thickness of the walls, the background 
 		// color of the screen, and perhaps others
 		private static Dimension leftWallDimensions, rightWallDimensions, 
-										topWallDimensions, bottomWallDimensions;
+								 topWallDimensions, bottomWallDimensions;
 		
 		//upper left x and y coordinates
-		private static Point upperLeftX, upperLeftY; 
+		private static int upperLeftX, upperLeftY; 
 		
 		private static Point leftWallCoordinates, rightWallCoordinates,
 							 topWallCoordinates, bottomWallCoordinates;
 				
 		private int wallThickness;
-		private Color BACKGROUND_COLOR, SCREEN_COLOR;
+		private Color BACKGROUND_COLOR;
 		
 		private Wall leftWall, rightWall, topWall, bottomWall;
 		
@@ -48,9 +50,9 @@ import java.awt.geom.*;
 		private AnimatedSmiley animSmiley3;
 		
 		// previous smileys
-		private AnimatedSmiley prevSmiley1;
+		/*private AnimatedSmiley prevSmiley1;
 		private AnimatedSmiley prevSmiley2;
-		private AnimatedSmiley prevSmiley3;
+		private AnimatedSmiley prevSmiley3;*/
 		private BouncingGroup bouncingGroup;
 		
 		private int width;
@@ -120,7 +122,7 @@ import java.awt.geom.*;
 			}
 		}
 
-		
+	
 	// Inherited method:
 	// 	public void repaint() - forces Java to redraw this display
 		
@@ -130,13 +132,15 @@ import java.awt.geom.*;
 	public BouncingDisplay(BouncingGroup bouncingGroup)
 	{
 		//screen Info
-		BACKGROUND_COLOR = Color.black;
-		SCREEN_COLOR = Color.white;
+		this.BACKGROUND_COLOR = Color.WHITE;
 		wallThickness = 10;
 		
 		// these dimensions probably need to come from the BouncingFrame...not sure yet
-		width = 500;
-		height = 480;
+		width = 495;
+		height = 472; 
+		
+		//width = this.getPreferredSize().width;
+		//height = this.getPreferredSize().height;
 		
 		//wall edge information (width, height) 
 		leftWallDimensions = new Dimension(wallThickness, height);
@@ -145,15 +149,15 @@ import java.awt.geom.*;
 		bottomWallDimensions = new Dimension(width, wallThickness);
 		
 		// making the smileys
-		bouncingGroup = new BouncingGroup();
-		animSmiley1 = bouncingGroup.getSmiley1();
-		animSmiley2 = bouncingGroup.getSmiley2();
-		animSmiley3 = bouncingGroup.getSmiley3();
+		this.bouncingGroup = bouncingGroup;
+		this.animSmiley1 = bouncingGroup.getSmiley1();
+		this.animSmiley2 = bouncingGroup.getSmiley2();
+		this.animSmiley3 = bouncingGroup.getSmiley3();
 		
 		// make the previous smileys, calling AnimatedSmiley copy constructor
-		prevSmiley1 = new AnimatedSmiley(animSmiley1);
-		prevSmiley2 = new AnimatedSmiley(animSmiley2);
-		prevSmiley3 = new AnimatedSmiley(animSmiley3);
+		/*this.prevSmiley1 = new AnimatedSmiley(animSmiley1);
+		this.prevSmiley2 = new AnimatedSmiley(animSmiley2);
+		this.prevSmiley3 = new AnimatedSmiley(animSmiley3);*/
 		
 		//Wall coordinates
 		//upperLeftFaceCoordinates = new Point(200, 200);
@@ -183,19 +187,21 @@ import java.awt.geom.*;
 		// Erase the currently-displayed smileys
 		// Draw each smiley onto its place on the screen
 		// The moving smileys are now the previous smileys...
-		graphicManager.setColor(leftWall.wallColor);
 		
 		//g2.draw(leftWall.wallRect);
 		drawWall(leftWall);
 		drawWall(rightWall);
 		drawWall(bottomWall);
 		drawWall(topWall);
+	
+		animSmiley1 = bouncingGroup.getSmiley1();
+		animSmiley2 = bouncingGroup.getSmiley2();
+		animSmiley3 = bouncingGroup.getSmiley3();		
 		
-		// drawSmiley still needs some work, and we still need to 
-		// assign previous smiley so that we can do the deletions
 		drawSmiley(animSmiley1);
 		drawSmiley(animSmiley2);
 		drawSmiley(animSmiley3);
+		
 	}
 	
 	private void drawWall(Wall wall)
@@ -278,8 +284,8 @@ import java.awt.geom.*;
 	{
 		// complete
 		
-		part.getCenterX();
-		part.getCenterY();
+		upperLeftX = part.getCenterX() - (int)part.getXLength()/2;
+		upperLeftY = part.getCenterY() - (int)part.getYLength()/2;
 	}
 	
 	// drawSmiley: draw a smiley by drawing each of its parts
@@ -297,21 +303,10 @@ import java.awt.geom.*;
 	// in with the part's color
 	private void drawPart(SmileyFacePart part)
 	{
-		Ellipse2D.Double copiedPart = new Ellipse2D.Double(part.getCenterX(), part.getCenterY(), part.getXLength(), part.getYLength());
-		
-		graphicManager.fill(copiedPart);
-		graphicManager.draw(copiedPart);
-	}
-	
-	// erase: erase (by making the same as the
-	// background color) the smiley face currently 
-	// shown on the display
-	private void erase(SmileyFace smiley)
-	{
-		smiley.getFace().setColor(BACKGROUND_COLOR);
-		smiley.getLeftEye().setColor(BACKGROUND_COLOR);
-		smiley.getRightEye().setColor(BACKGROUND_COLOR);
-		smiley.getSmile().setColor(BACKGROUND_COLOR);
+		computeUpperLeft(part);
+
+		graphicManager.setColor(part.getColor());
+		graphicManager.fillOval(upperLeftX, upperLeftY, (int)part.getXLength(), (int)part.getYLength());
 	}
 	
 }

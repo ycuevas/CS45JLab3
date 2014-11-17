@@ -92,9 +92,7 @@ public class BouncingSmileyApplet extends Applet
 			{
 				wallRect = new Rectangle(leftWallCoordinates, leftWallDimensions);
 				wallEdge = (int) (leftWallCoordinates.getX() + leftWallDimensions.getWidth());
-//				graphicManager.drawString(name, 0,250);
-//				graphicManager.drawRect((int) leftWallCoordinates.getX(), (int) leftWallCoordinates.getY(),
-//										(int) leftWallDimensions.getWidth(), (int) leftWallDimensions.getHeight());
+
 			}
 			
 			//create right wall
@@ -102,9 +100,7 @@ public class BouncingSmileyApplet extends Applet
 			{
 				wallRect = new Rectangle(rightWallCoordinates, rightWallDimensions);
 				wallEdge = (int) (rightWallCoordinates.getX() + rightWallDimensions.getWidth());
-//				graphicManager.drawString(name, 500, 250);
-//				graphicManager.drawRect((int) rightWallCoordinates.getX(), (int) rightWallCoordinates.getY(),
-//										(int) rightWallDimensions.getWidth(), (int) rightWallDimensions.getHeight());
+
 			}
 			
 			//create top wall
@@ -112,9 +108,7 @@ public class BouncingSmileyApplet extends Applet
 			{
 				wallRect = new Rectangle(topWallCoordinates, topWallDimensions);
 				wallEdge = (int) (topWallCoordinates.getY() + topWallDimensions.getHeight());
-//				graphicManager.drawString(name, 0, 250);
-//				graphicManager.drawRect((int) topWallCoordinates.getX(), (int) topWallCoordinates.getY(),
-//						(int) topWallDimensions.getWidth(), (int) topWallDimensions.getHeight());
+
 			}
 			
 			//create bottom wall
@@ -122,9 +116,7 @@ public class BouncingSmileyApplet extends Applet
 			{
 				wallRect = new Rectangle(bottomWallCoordinates, bottomWallDimensions);
 				wallEdge = (int) (bottomWallCoordinates.getY() + bottomWallDimensions.getHeight());
-//				graphicManager.drawString(name, 500, 250);
-//				graphicManager.drawRect((int) bottomWallCoordinates.getX(), (int) bottomWallCoordinates.getY(),
-//						(int) bottomWallDimensions.getWidth(), (int) bottomWallDimensions.getHeight());
+
 			}
 		}
 	}

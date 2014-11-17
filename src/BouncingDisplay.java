@@ -9,7 +9,7 @@
 import java.awt.*;
 import java.awt.geom.*;
 
-import javafx.scene.shape.Ellipse;
+//import javafx.scene.shape.Ellipse;
 
 // Panel that displays the moving smiley
 	class BouncingDisplay extends BasicDisplay
@@ -25,6 +25,10 @@ import javafx.scene.shape.Ellipse;
 		private static Point upperLeftFaceCoordinates, 
 									leftWallCoordinates, rightWallCoordinates,
 										topWallCoordinates, bottomWallCoordinates;
+		private static Point upperLeftX, upperLeftY; 
+		
+		private static Point leftWallCoordinates, rightWallCoordinates,
+							 topWallCoordinates, bottomWallCoordinates;
 				
 		private int wallThickness;
 		private Color BACKGROUND_COLOR, SCREEN_COLOR;
@@ -51,7 +55,8 @@ import javafx.scene.shape.Ellipse;
 		private AnimatedSmiley prevSmiley3;
 		private BouncingGroup bouncingGroup;
 		
-		
+		private int width;
+		private int height;
 		
 		// A wall of the display (off which the smiley bounces)
 		// The outer class will make four objects of this class,
@@ -83,7 +88,7 @@ import javafx.scene.shape.Ellipse;
 				// yLength for each rectangle representing a wall, 
 				// and the edge the smiley will hit when it touches 
 				// a wall, 
-				
+
 				// using information about the display screen 
 				// and frame, and the wall's thickness
 				
@@ -92,6 +97,7 @@ import javafx.scene.shape.Ellipse;
 				{
 					wallRect = new Rectangle(leftWallCoordinates, leftWallDimensions);
 					wallEdge = (int) (leftWallCoordinates.getX() + leftWallDimensions.getWidth());
+
 //					graphicManager.drawString(name, 0,250);
 //					graphicManager.drawRect((int) leftWallCoordinates.getX(), (int) leftWallCoordinates.getY(),
 //											(int) leftWallDimensions.getWidth(), (int) leftWallDimensions.getHeight());
@@ -143,11 +149,15 @@ import javafx.scene.shape.Ellipse;
 		SCREEN_COLOR = Color.white;
 		wallThickness = 10;
 		
+		// these dimensions probably need to come from the BouncingFrame...not sure yet
+		width = 500;
+		height = 480;
+		
 		//wall edge information (width, height) 
-		leftWallDimensions = new Dimension(50,500);
-		rightWallDimensions = new Dimension(-50, 500);
-		topWallDimensions = new Dimension(500, 50);
-		bottomWallDimensions = new Dimension(500, -50);
+		leftWallDimensions = new Dimension(wallThickness, height);
+		rightWallDimensions = new Dimension(wallThickness, height);
+		topWallDimensions = new Dimension(width, wallThickness);
+		bottomWallDimensions = new Dimension(width, wallThickness);
 		
 		// making the smileys
 		bouncingGroup = new BouncingGroup();
@@ -161,11 +171,11 @@ import javafx.scene.shape.Ellipse;
 //		prevSmiley3 = new AnimatedSmiley(animSmiley3);
 		
 		//Wall coordinates
-		upperLeftFaceCoordinates = new Point(200, 200);
+		//upperLeftFaceCoordinates = new Point(200, 200);
 		leftWallCoordinates = new Point(0,0);
-		rightWallCoordinates = new Point(500, 0);
+		rightWallCoordinates = new Point(width - wallThickness, 0);
 		topWallCoordinates = new Point(0, 0);
-		bottomWallCoordinates = new Point(0, 500);
+		bottomWallCoordinates = new Point(0, height - wallThickness);
 		
 		//build walls
 		leftWall = new Wall(WallName.LEFT, Color.blue);
@@ -185,7 +195,7 @@ import javafx.scene.shape.Ellipse;
 		// Done as a matter of course as the first two
 		// lines of a paintComponent routine
 		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D)g;
+		graphicManager = (Graphics2D)g;
 		
 		// Erase the currently-displayed smileys
 		// Draw each smiley onto its place on the screen
@@ -193,8 +203,27 @@ import javafx.scene.shape.Ellipse;
 		erase(prevSmiley1);
 		drawSmiley(animSmiley1);
 		prevSmiley1 = new AnimatedSmiley(animSmiley1);
+		graphicManager.setColor(leftWall.wallColor);
+		
+		//g2.draw(leftWall.wallRect);
+		drawWall(leftWall);
+		drawWall(rightWall);
+		drawWall(bottomWall);
+		drawWall(topWall);
+		
+		// drawSmiley still needs some work, and we still need to 
+		// assign previous smiley so that we can do the deletions
+		drawSmiley(animSmiley1);
+		drawSmiley(animSmiley2);
+		drawSmiley(animSmiley3);
 	}
 	
+	private void drawWall(Wall wall)
+	{
+		graphicManager.setColor(wall.wallColor);
+		graphicManager.fillRect(wall.wallRect.x, wall.wallRect.y, wall.wallRect.width, wall.wallRect.height);
+		graphicManager.draw(wall.wallRect);
+	}
 		
 	// Return which wall's edge was hit
 	public int getWallEdge(WallName wallName)
@@ -207,6 +236,7 @@ import javafx.scene.shape.Ellipse;
 		else {
 			return 0;
 		}
+		return getWall(wallName).wallEdge;
 	}
 	
 	// Return the color of the wallName wall
@@ -219,6 +249,31 @@ import javafx.scene.shape.Ellipse;
 		else {
 			return null;
 		}
+		return getWall(wallName).wallColor;
+	}
+	
+	private Wall getWall(WallName wallName)
+	{
+		Wall wall = null;
+		
+		if(wallName == WallName.BOTTOM)
+		{
+			wall = bottomWall;
+		}
+		else if(wallName == WallName.LEFT)
+		{
+			wall = leftWall;
+		}
+		else if(wallName == WallName.RIGHT)
+		{
+			wall = rightWall;
+		}
+		else if(wallName == WallName.TOP)
+		{
+			wall = topWall;
+		}
+		
+		return wall;
 	}
 	
 	// Set the specified wall to the provided color
@@ -237,6 +292,22 @@ import javafx.scene.shape.Ellipse;
 			bottomWall.wallColor = c;
 		}
 		// if wallName param isn't one of these types, nothing gets changed
+		if(wallName == WallName.BOTTOM)
+		{
+			bottomWall = new Wall(wallName, c);
+		}
+		else if(wallName == WallName.LEFT)
+		{
+			leftWall = new Wall(wallName, c);
+		}
+		else if(wallName == WallName.RIGHT)
+		{
+			rightWall = new Wall(wallName, c);
+		}
+		else if(wallName == WallName.TOP)
+		{
+			topWall = new Wall(wallName, c);
+		}	
 	}
 	
 	// The methods described below are private, and so
@@ -256,6 +327,10 @@ import javafx.scene.shape.Ellipse;
 		double newX = part.getCenterX() - (part.getXLength()/2);
 		double newY = part.getCenterY() - (part.getYLength()/2);
 		upperLeftFaceCoordinates.setLocation(newX, newY);
+		// complete
+		
+		part.getCenterX();
+		part.getCenterY();
 	}
 	
 	// drawSmiley: draw a smiley by drawing each of its parts
@@ -274,7 +349,8 @@ import javafx.scene.shape.Ellipse;
 	private void drawPart(SmileyFacePart part)
 	{
 		Ellipse2D.Double copiedPart = new Ellipse2D.Double(part.getCenterX(), part.getCenterY(), part.getXLength(), part.getYLength());
-		graphicManager.setColor(part.getColor());
+		
+		graphicManager.fill(copiedPart);
 		graphicManager.draw(copiedPart);
 	}
 	

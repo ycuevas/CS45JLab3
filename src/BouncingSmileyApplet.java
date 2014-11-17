@@ -70,7 +70,7 @@ public class BouncingSmileyApplet extends Applet
 		private String name;
 		private int wallEdge;
 		
-		public Wall(WallName position, Color c)                            // WHY AM I REUSING CODE ???
+		public Wall(WallName position, Color c)                            
 		{
 			// walls have a left position, top position, 
 			// length in x dimension, length in y dimension,
@@ -389,6 +389,9 @@ public class BouncingSmileyApplet extends Applet
 		else if (hitTopWall(cntSmiley)) { return WallName.TOP; }
 		else if (hitBottomWall(cntSmiley)) { return WallName.BOTTOM; }
 		return WallName.NONE;
+
+		// complete
+		return null;
 	}
 	
 	// Return true if hit left wall, false otherwise
@@ -465,18 +468,22 @@ public class BouncingSmileyApplet extends Applet
 		}
 		return false;
 	}	
+		return false;
+	}
+
 
 	
 	// Return which wall's edge was hit
 	public int getWallEdge(WallName wallName)
 	{
 		// complete
-		return 3;
+		return -1;
 	}
 	
 	// Return the color of the wallName wall
 	public Color getWallColor(WallName wallName)
 	{
+
 		if (wallName == WallName.LEFT) { return leftWall.wallColor; }
 		if (wallName == WallName.RIGHT) { return rightWall.wallColor; }
 		if (wallName == WallName.TOP) { return topWall.wallColor; }
@@ -487,6 +494,11 @@ public class BouncingSmileyApplet extends Applet
 	}
 	
 	
+	// complete
+		return null;
+	}
+
+
 	// Set the specified wall to the provided color
 	public void setWallColor(WallName wallName, Color c)
 	{

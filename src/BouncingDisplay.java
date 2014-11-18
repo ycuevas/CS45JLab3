@@ -1,5 +1,4 @@
 // BouncingDisplay.java - build the display panel
-//
 // ICS 45J, Fall 2014: Lab Assignment 3
 //
 // Completed by: Alfonso Aranzazu
@@ -25,6 +24,10 @@ import java.awt.*;
 								 topWallDimensions, bottomWallDimensions;
 		
 		//upper left x and y coordinates
+		private static Point upperLeftFaceCoordinates, 
+									leftWallCoordinates, rightWallCoordinates,
+										topWallCoordinates, bottomWallCoordinates;
+		private static Point upperLeftX, upperLeftY; 
 		private static int upperLeftX, upperLeftY; 
 		
 		private static Point leftWallCoordinates, rightWallCoordinates,
@@ -33,7 +36,7 @@ import java.awt.*;
 		private int wallThickness;
 		private final Color BACKGROUND_COLOR = Color.BLACK;
 		
-		private Wall leftWall, rightWall, topWall, bottomWall;
+		private static Wall leftWall, rightWall, topWall, bottomWall;
 		
 		// Needed fields go here. You'll likely want
 		// fields for the moving smileys, the 
@@ -97,6 +100,7 @@ import java.awt.*;
 				{
 					wallRect = new Rectangle(leftWallCoordinates, leftWallDimensions);
 					wallEdge = (int) (leftWallCoordinates.getX() + leftWallDimensions.getWidth());
+
 				}
 				
 				//create right wall
@@ -104,6 +108,7 @@ import java.awt.*;
 				{
 					wallRect = new Rectangle(rightWallCoordinates, rightWallDimensions);
 					wallEdge = (int) (rightWallCoordinates.getX() + rightWallDimensions.getWidth());
+
 				}
 				
 				//create top wall
@@ -111,6 +116,7 @@ import java.awt.*;
 				{
 					wallRect = new Rectangle(topWallCoordinates, topWallDimensions);
 					wallEdge = (int) (topWallCoordinates.getY() + topWallDimensions.getHeight());
+
 				}
 				
 				//create bottom wall
@@ -118,6 +124,7 @@ import java.awt.*;
 				{
 					wallRect = new Rectangle(bottomWallCoordinates, bottomWallDimensions);
 					wallEdge = (int) (bottomWallCoordinates.getY() + bottomWallDimensions.getHeight());
+
 				}
 			}
 		}
@@ -149,6 +156,15 @@ import java.awt.*;
 		bottomWallDimensions = new Dimension(width, wallThickness);
 		
 		// making the smileys
+		bouncingGroup = new BouncingGroup();
+		animSmiley1 = bouncingGroup.getSmiley1();
+//		animSmiley2 = bouncingGroup.getSmiley2();
+//		animSmiley3 = bouncingGroup.getSmiley3();
+		
+		// make the previous smileys, calling AnimatedSmiley copy constructor
+		prevSmiley1 = new AnimatedSmiley(animSmiley1);
+//		prevSmiley2 = new AnimatedSmiley(animSmiley2);
+//		prevSmiley3 = new AnimatedSmiley(animSmiley3);
 		this.bouncingGroup = bouncingGroup;
 		this.animSmiley1 = bouncingGroup.getSmiley1();
 		this.animSmiley2 = bouncingGroup.getSmiley2();
@@ -171,6 +187,8 @@ import java.awt.*;
 		rightWall = new Wall(WallName.RIGHT, Color.yellow);
 		topWall = new Wall(WallName.TOP, Color.red);
 		bottomWall = new Wall(WallName.BOTTOM, Color.orange);
+		
+		repaint();
 	}
 	
 	// paintComponent: called by the runtime environment 
@@ -187,6 +205,10 @@ import java.awt.*;
 		// Erase the currently-displayed smileys
 		// Draw each smiley onto its place on the screen
 		// The moving smileys are now the previous smileys...
+		erase(prevSmiley1);
+		drawSmiley(animSmiley1);
+		prevSmiley1 = new AnimatedSmiley(animSmiley1);
+		graphicManager.setColor(leftWall.wallColor);
 		
 		//g2.draw(leftWall.wallRect);
 		drawWall(leftWall);
@@ -214,12 +236,27 @@ import java.awt.*;
 	// Return which wall's edge was hit
 	public int getWallEdge(WallName wallName)
 	{
+		// complete
+		if (wallName == WallName.LEFT) {return leftWall.wallEdge;}
+		else if (wallName == WallName.RIGHT) {return rightWall.wallEdge; }
+		else if (wallName == WallName.TOP) {return topWall.wallEdge; }
+		else if (wallName == WallName.BOTTOM) {return bottomWall.wallEdge; }
+		else {
+			return 0;
+		}
 		return getWall(wallName).wallEdge;
 	}
 	
 	// Return the color of the wallName wall
 	public Color getWallColor(WallName wallName)
 	{
+		if (wallName == WallName.LEFT) { return leftWall.wallColor; }
+		else if (wallName == WallName.RIGHT) { return rightWall.wallColor; }
+		else if (wallName == WallName.TOP) { return topWall.wallColor; }
+		else if (wallName == WallName.BOTTOM) { return bottomWall.wallColor; }
+		else {
+			return null;
+		}
 		return getWall(wallName).wallColor;
 	}
 	
@@ -250,6 +287,19 @@ import java.awt.*;
 	// Set the specified wall to the provided color
 	public void setWallColor(WallName wallName, Color c)
 	{	
+		if (wallName == WallName.LEFT){
+			leftWall.wallColor = c;
+		}
+		else if (wallName == WallName.RIGHT){
+			rightWall.wallColor = c;
+		}
+		else if (wallName == WallName.TOP){
+			topWall.wallColor = c;
+		}
+		else if (wallName == WallName.BOTTOM){
+			bottomWall.wallColor = c;
+		}
+		// if wallName param isn't one of these types, nothing gets changed
 		if(wallName == WallName.BOTTOM)
 		{
 			bottomWall = new Wall(wallName, c);
@@ -279,9 +329,12 @@ import java.awt.*;
 	// an attributes change would cause the upper-left position to
 	// change. It's recommended because the graphic drawing routines
 	// need to be given the upper left corner of a figure (in addition
-	// to x and y legnths) to draw it.
+	// to x and y lengths) to draw it.
 	private void computeUpperLeft(SmileyFacePart part)
 	{
+		double newX = part.getCenterX() - (part.getXLength()/2);
+		double newY = part.getCenterY() - (part.getYLength()/2);
+		upperLeftFaceCoordinates.setLocation(newX, newY);
 		// complete
 		
 		upperLeftX = part.getCenterX() - (int)part.getXLength()/2;

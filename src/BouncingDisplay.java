@@ -31,7 +31,7 @@ import java.awt.*;
 							 topWallCoordinates, bottomWallCoordinates;
 				
 		private int wallThickness;
-		private Color BACKGROUND_COLOR;
+		private final Color BACKGROUND_COLOR = Color.BLACK;
 		
 		private Wall leftWall, rightWall, topWall, bottomWall;
 		
@@ -132,12 +132,12 @@ import java.awt.*;
 	public BouncingDisplay(BouncingGroup bouncingGroup)
 	{
 		//screen Info
-		this.BACKGROUND_COLOR = Color.WHITE;
+		setBackground(BACKGROUND_COLOR);
 		wallThickness = 10;
 		
 		// these dimensions probably need to come from the BouncingFrame...not sure yet
-		width = 495;
-		height = 472; 
+		width = 500;
+		height = 500; 
 		
 		//width = this.getPreferredSize().width;
 		//height = this.getPreferredSize().height;
